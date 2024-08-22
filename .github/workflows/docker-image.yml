@@ -2,34 +2,32 @@ name: Docker Build and Push
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
-
   build-and-push:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
-      
-    - name: Login to Docker Hub 
-      uses: docker/login-action@v1
+      - uses: actions/checkout@v2
 
-    with:
-      username: ${{ secrets.DOCKER_HUB_USERNAME }} 
-      password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-    - name: Build and push Docker image 
-      uses: docker/build-push-action@v2 
-      with:
-        context: .
-        file: /Dockerfile
-        push: true
-        tags: tako007/customersegment: latest
-    - name: Logout from Docker Hub
-      run: docker logout
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: tako007/customersegment:latest
+
+      - name: Logout from Docker Hub
+        run: docker logout
